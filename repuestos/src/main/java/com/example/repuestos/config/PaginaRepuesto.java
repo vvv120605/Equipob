@@ -9,7 +9,7 @@ public class PaginaRepuesto {
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8080/api/v1/repuestos")
+                .baseUrl("http://localhost:9002")
                 .build();
     }
 

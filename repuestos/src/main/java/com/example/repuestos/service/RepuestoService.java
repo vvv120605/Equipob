@@ -1,6 +1,8 @@
 
 package com.example.repuestos.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.repuestos.model.Repuesto;
@@ -13,6 +15,15 @@ import lombok.RequiredArgsConstructor;
 public class RepuestoService {
 
     private final RepuestoRepository repuestoRepository;
+    private final VehiculoClient vehiculoClient;
+
+    public List<Repuesto> listarRepuestos() {
+        return repuestoRepository.findAll();
+    }
+
+    public List<Repuesto> buscarPorMarcaYModelo(String marca, String modelo) {
+        return repuestoRepository.findByMarcaIgnoreCaseAndModeloIgnoreCase(marca, modelo);
+    }
 
     // Agregar repuesto nuevo
     public Repuesto agregarRepuesto(Repuesto repuesto) {
@@ -47,5 +58,19 @@ public class RepuestoService {
 
         rep.setStock(rep.getStock() + cantidad);
         return repuestoRepository.save(rep);
+    }
+
+    public String consultarVehiculos() {
+        return vehiculoClient.consultarVehiculos();
+    }
+
+    public String consultarVehiculosDelRepuesto(Long id) {
+        Repuesto repuesto = repuestoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Repuesto no encontrado"));
+
+        return vehiculoClient.consultarVehiculosPorRepuesto(
+                repuesto.getMarca(),
+                repuesto.getModelo()
+        );
     }
 }
